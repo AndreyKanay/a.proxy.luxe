@@ -1,5 +1,5 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
-// import { AuthService } from './auth.service';
+import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
@@ -7,6 +7,8 @@ import { LoginDto } from './dto/login.dto';
 @ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({
@@ -47,12 +49,7 @@ export class AuthController {
     },
   })
   async register(@Body() registerDto: RegisterDto) {
-    console.log(registerDto);
-    return {
-      id: '550e8400-e29b-41d4-a716-446655440000',
-      email: 'user@example.com',
-      createdAt: '2024-06-20T12:34:56.789Z',
-    };
+    return this.authService.register(registerDto);
   }
 
   @Post('login')
@@ -101,10 +98,6 @@ export class AuthController {
     },
   })
   async login(@Body() loginDto: LoginDto) {
-    console.log(loginDto);
-    return {
-      accessToken: 'jwt-token',
-      refreshToken: 'refresh-token',
-    };
+    return this.authService.login(loginDto);
   }
 }

@@ -4,6 +4,17 @@ FROM node:20.12.2-alpine as base
 WORKDIR /app
 ENV PNPM_HOME=/pnpm
 ENV PATH="$PNPM_HOME:$PATH"
+
+# Установка инструментов для сборки нативных модулей
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    gcc \
+    libc-dev \
+    linux-headers
+
+# Включаем pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # Стадия для разработки
